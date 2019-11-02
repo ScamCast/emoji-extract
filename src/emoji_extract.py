@@ -1,6 +1,6 @@
 import emoji
 import regex
-
+import os
 
 
 test_str = '''
@@ -58,9 +58,11 @@ emoji_dict_count = extract_emoji_dict(test_str)
 print(emoji_dict_count)
 
 
+scriptpath = os.path.dirname(os.path.realpath(__file__))
+filepath = os.path.join(scriptpath, 'emojis.txt')
 
 # Test: Write emojis to text file
 
-with open('emoji.txt','wb') as E:
+with open(filepath,'wb') as E:
     for x in emoji_dict_count:
         E.write(x.encode())
