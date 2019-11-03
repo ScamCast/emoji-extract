@@ -7,7 +7,7 @@
 
 
 ### Emojis(text)
-    import Emojis
+    from emoji_extract import Emojis
     text = 😂 This is a test string 😄😃 This is 😀 a 😊test. 😉😜Test❤️
     emojis = Emojis(text)
 
