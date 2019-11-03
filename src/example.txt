@@ -18,4 +18,4 @@ Output:  This is a test string  This is  a test. Test
 
 Method: emojis.strip(extra_spaces=False)
 Output: This is a test string This is a test. Test
-        
+    

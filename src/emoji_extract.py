@@ -1,4 +1,3 @@
-from pprint import pprint as pp
 import emoji
 import regex
 import os
@@ -80,11 +79,7 @@ if __name__ == '__main__':
     as_strip= emojis.strip()
     as_strip_spaces = emojis.strip(extra_spaces=False)
 
-    scriptpath = os.path.dirname(os.path.realpath(__file__))
-    filepath = os.path.join(scriptpath, 'example.txt')
-
-    with open(filepath,'wb') as f:
-        f.write(f"""
+    output = f"""
 Input:
 text = {emojis.text}
 
@@ -104,4 +99,11 @@ Output: {as_strip}
 
 Method: emojis.strip(extra_spaces=False)
 Output: {as_strip_spaces}
-        """.encode())
+    """
+    print(output)
+
+    scriptpath = os.path.dirname(os.path.realpath(__file__))
+    filepath = os.path.join(scriptpath, 'example.txt')
+
+    with open(filepath,'wb') as f:
+        f.write(output.encode())
