@@ -1,67 +1,107 @@
+from pprint import pprint as pp
 import emoji
 import regex
 import os
 
 
-test_str = '''
-Th👽is i👽s 😊a t👽👽👽👽👽👽est strin👽g.👙👙.
-🤔 🙈 😌 💕 👭 👙 👩🏾‍🎓 👨‍👩‍👦‍👦 😊 🙅🏽 🙅🏽
-.'''
+class Emojis:
+
+    def __init__(self, text=None):
+        self.text = text
+        self.emoji_list = []
+        self.emoji_dict = {}
+        self.count = 0
+
+    def to_list(self, text=None):
+        self.emoji_list = []
+        self.text = text or self.text
+        if not self.text:
+            raise Exception('No text string specified for: Emojis().to_list()')
+        words = regex.findall(r'\X', self.text)
+        for word in words:
+            if any(char in emoji.UNICODE_EMOJI for char in word):
+                self.count += 1
+                self.emoji_list.append(word)
+        return self.emoji_list
+
+    def to_dict(self, text=None):
+        self.to_list(text)
+        self.emoji_dict = {}
+        for moji in self.emoji_list:
+            if not moji in self.emoji_dict:
+                emoji_key = moji
+                emoji_value = 1
+            elif moji in self.emoji_dict:
+                emoji_key = moji
+                emoji_value = self.emoji_dict.get(emoji_key) + 1
+            self.emoji_dict.update({ emoji_key: emoji_value})
+        return self.emoji_dict
+
+    def to_string(self, text=None):
+        self.to_list(text)
+        return ''.join(self.emoji_list)
+
+    def strip(self, text=None, extra_spaces=True):
+        self.to_list(text)
+        self.stripped = self.text
+        for moji in self.emoji_list:
+            self.stripped = self.stripped.replace(moji, '')
+        if not extra_spaces:
+            """
+            ::extra_spaces = True|False
+            Remove extra spaces from result string.
+
+                text = '😂 This is a test string 😄😃 This is 😀 a 😊test. 😉😜Test❤️ '
+
+                extra_spaces(text, extra_spaces=True)
+                >>> ' This is a test string  This is  a test. Test '
+
+                extra_spaces(text, extra_spaces=False)
+                >>> 'This is a test string This is a test. Test'
+            """
+            while '  ' in self.stripped:
+                self.stripped = self.stripped.replace('  ', ' ')
+            if self.stripped.startswith(' '):
+                self.stripped = self.stripped[1:]
+            if self.stripped.endswith(' '):
+                self.stripped = self.stripped[:-1]
+        return self.stripped
 
 
-## Extract emojis from text and return a list ##
-
-def extract_emojis(text):
-
-    emoji_list = []
-    data = regex.findall(r'\X', text)
-    for word in data:
-        if any(char in emoji.UNICODE_EMOJI for char in word):
-            emoji_list.append(word)
-
-    return emoji_list
-
-
-extracted_emojis = extract_emojis(test_str)
-print(extracted_emojis)
-
-
-
-
-## Extract emojis from string and return a
-## dictionary with a count of each emoji
-
-def extract_emoji_dict(text):
-
-    emoji_list = []
-    data = regex.findall(r'\X', text)
-    for word in data:
-        if any(char in emoji.UNICODE_EMOJI for char in word):
-            emoji_list.append(word)
-
-    emoji_dict = {}
-    for moji in emoji_list:
-        if not moji in emoji_dict:
-            emoji_key = moji
-            emoji_value = 1
-        elif moji in emoji_dict:
-            emoji_key = moji
-            emoji_value = emoji_dict.get(emoji_key) + 1
-
-        emoji_dict.update({ emoji_key: emoji_value})
-
-    return emoji_dict
-
-
-emoji_dict_count = extract_emoji_dict(test_str)
-print(emoji_dict_count)
-
-
-scriptpath = os.path.dirname(os.path.realpath(__file__))
-filepath = os.path.join(scriptpath, 'emojis.txt')
 
 # Test: Write emojis to text file
+if __name__ == '__main__':
 
-with open(filepath,'wb') as E:
-    for x in emoji_dict_count:
-        E.write(x.encode())
+    emojis = Emojis('😂 This is a test string 😄😃 This is 😀 a 😊test. 😉😜Test❤️ ')
+
+    as_list = emojis.to_list()
+    as_dict = emojis.to_dict()
+    as_string = emojis.to_string()
+    as_strip= emojis.strip()
+    as_strip_spaces = emojis.strip(extra_spaces=False)
+
+    scriptpath = os.path.dirname(os.path.realpath(__file__))
+    filepath = os.path.join(scriptpath, 'example.txt')
+
+    with open(filepath,'wb') as f:
+        f.write(f"""
+Input:
+text = {emojis.text}
+
+Instance: emojis = Emojis(text)
+
+Method: emojis.to_list()
+Output: {as_list}
+
+Method: emojis.to_dict()
+Output: {as_dict}
+
+Method: emojis.to_string()
+Output: {as_string}
+
+Method: emojis.strip()
+Output: {as_strip}
+
+Method: emojis.strip(extra_spaces=False)
+Output: {as_strip_spaces}
+        """.encode())

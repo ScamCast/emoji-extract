@@ -1,0 +1,21 @@
+
+Input:
+text = 😂 This is a test string 😄😃 This is 😀 a 😊test. 😉😜Test❤️ 
+
+Instance: emojis = Emojis(text)
+
+Method: emojis.to_list()
+Output: ['😂', '😄', '😃', '😀', '😊', '😉', '😜', '❤️']
+
+Method: emojis.to_dict()
+Output: {'😂': 1, '😄': 1, '😃': 1, '😀': 1, '😊': 1, '😉': 1, '😜': 1, '❤️': 1}
+
+Method: emojis.to_string()
+Output: 😂😄😃😀😊😉😜❤️
+
+Method: emojis.strip()
+Output:  This is a test string  This is  a test. Test 
+
+Method: emojis.strip(extra_spaces=False)
+Output: This is a test string This is a test. Test
+        
